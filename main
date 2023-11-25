@@ -1,0 +1,85 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Tracking ID's</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+        integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container ">
+        <h3 class="text-center mt-4">Tracking ID Retrieval</h3>
+        <div class="row mt-3">
+            <div class="col text-center">
+                <div class="mb-5">
+                    <label for="userInput" class="form-label text-center">Input</label>
+                    <textarea class="form-control border border-dark" name="userInput" id="userInput"
+                        rows="11"></textarea>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="mb-5">
+                    <label for="userOutput" class="form-label text-center">Tracking ID's</label>
+                    <textarea class="form-control border border-dark" name="tracking" id="output" rows="11"></textarea>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <button class="btn btn-primary" type="submit" onclick="extractTracking()">Retrieve</button>
+                <button class="btn btn-primary" onclick="openTracking()">Track (17 Track)</button>
+                <button class="btn btn-primary" onclick="openTrackingg()">Track (Aftership)</button>
+
+               <p><h7>NOTE: First Retrieve & Then Track</h7></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        function extractTracking() {
+            // Get user input
+            var userInput = document.getElementById('userInput').value;
+
+            // Define a pattern to match Tracking values with "Tracking Number:"
+            var Pattern = /Tracking Number:\s*([A-Z0-9\s]{6,35})\s*Carrier:/g;
+
+            // Apply the regex pattern to the user input
+            var matches = userInput.match(Pattern);
+
+            // Construct the output URL with tracking IDs
+            if (matches) {
+                var trackingIDs = matches.map(match => match.replace("Tracking Number:", "").replace("Carrier:", "").trim().replace(/\s/g, ""));
+                document.getElementById('output').textContent = trackingIDs.join('\n');
+                var limitedTrackingIDs = trackingIDs.slice(0, 30);  
+                var outputUrl = "https://t.17track.net/en#nums=" + trackingIDs.join(',');
+                window.outputUrl = outputUrl;  
+                var outputUrl1 = "https://www.aftership.com/track?t=" + trackingIDs.join(',');
+                window.outputUrl1 = outputUrl1;
+            }else {
+                alert("No Tracking Numbers found.");
+            }
+        }
+
+        function openTracking() {
+            if (window.outputUrl) {
+                window.open(window.outputUrl, '_blank');
+            } else {
+                alert("Retrieve & then Press Track");
+            }
+        }
+        function openTrackingg() {
+            if (window.outputUrl1) {
+                window.open(window.outputUrl1, '_blank');
+            } else {
+                alert("Retrieve & then Press Track");
+            }
+        }
+    </script>
+</body>
+</html>
